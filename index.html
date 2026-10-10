@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>双重记录：03:17</title>
+<style>
+:root{color-scheme:dark;--bg:#10131b;--panel:#191f2b;--line:#343d4e;--text:#edf1f7;--muted:#9ba8ba;--accent:#b6c9ff;--accentbg:#263552}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,sans-serif}
+main{max-width:850px;margin:auto;padding:18px 14px 40px}.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.sub{color:var(--muted);font-size:12px;letter-spacing:.12em}.muted{color:var(--muted);font-size:14px}
+h1{font-size:25px;margin:4px 0}h2{font-size:17px;margin:0 0 10px}.panel{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:14px;margin:12px 0}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stat{background:#111722;border-radius:10px;padding:10px}.stat b{display:block;margin-top:3px}
+button{background:#202938;border:1px solid #414d62;color:var(--text);padding:11px 12px;border-radius:11px;min-height:44px;font:inherit;text-align:left;cursor:pointer}button:focus-visible{outline:3px solid var(--accent)}button:disabled{opacity:.4;cursor:not-allowed}.primary{background:var(--accentbg);border-color:var(--accent)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.chat{display:flex;flex-direction:column;gap:9px;max-height:300px;overflow:auto}.bubble{max-width:90%;padding:10px 12px;border-radius:14px;white-space:pre-wrap;overflow-wrap:anywhere}.in{align-self:flex-start;background:#222a38;border:1px solid #394456}.out{align-self:flex-end;background:#2b3c59}.stamp{font-size:11px;color:var(--muted);margin-bottom:4px}
+.tag{display:inline-block;border:1px solid var(--line);border-radius:30px;padding:3px 8px;margin:2px;font-size:12px}.log{border-left:2px solid #64748b;padding-left:10px;margin:10px 0}.hidden{display:none}.roomdesc{background:#111722;padding:12px;border-radius:12px}.notice{min-height:46px}.small{font-size:12px;color:var(--muted)}@media(max-width:430px){main{padding:12px 10px 28px}.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{padding:8px;font-size:13px}}
+</style>
+</head>
+<body><main id="game">
+<div class="top"><div><div class="sub">双视角悬疑 · 可操作网页</div><h1>双重记录：03:17</h1><div class="muted">两个人，两份记录，一个无法解释的夜晚。</div></div><button id="reset">重新开始 ↻</button></div>
+<section class="panel"><div class="row"><h2 id="who">当前视角：你</h2><span class="tag" id="clock">03:17</span></div><p id="intro">你在一间陌生公寓的客厅醒来。门锁从里面扣着，窗边有两只杯子。手机里出现一条没有头像的联系人消息。</p><div class="stats"><div class="stat"><span class="muted">本视角行动</span><b id="moves">0</b></div><div class="stat"><span class="muted">已确认线索</span><b id="count">0</b></div><div class="stat"><span class="muted">警惕程度</span><b id="alert">低</b></div></div></section>
+<section class="panel"><div class="row"><h2>▣ 手机消息</h2><span class="small" id="contact">未知联系人</span></div><div class="chat" id="chat" aria-live="polite">
+<div class="bubble in"><div class="stamp">未知 · 03:16</div>你醒了吗？</div>
+<div class="bubble in"><div class="stamp">未知 · 03:17</div>不要开门。无论门外的人说什么。</div>
+</div><div class="grid" id="chatActions" style="margin-top:12px">
+<button>回复：你是谁？</button><button>查看联系人资料</button><button>拨打电话</button><button>暂时不回复</button>
+</div></section>
+<section class="panel"><h2>⌖ 地图</h2><p class="muted">点击地点切换区域。调查会更新当前视角的物品和线索。</p><div class="grid" id="map">
+<button data-room="living" class="primary">客厅</button><button data-room="bedroom">卧室</button>
+<button data-room="kitchen">厨房</button><button data-room="door">入户门</button>
+<button data-room="hall">楼道</button><button data-room="study" disabled>书房（未解锁）</button>
+</div><div class="roomdesc" style="margin-top:12px"><h2 id="roomName">客厅</h2><div id="roomDesc">桌上有两只杯子，一只干燥，一只杯沿挂着水珠。电视是黑屏，屏幕却映出你的身后。</div><div class="grid" id="actions" style="margin-top:12px"><button>检查两只杯子</button><button>观察电视反光</button><button>检查手机</button></div></div></section>
+<div class="grid"><section class="panel"><h2>🎒 物品栏</h2><div id="items" class="muted">空</div></section><section class="panel"><h2>⌕ 线索板</h2><div id="clues" class="muted">尚无确认线索。</div></section></div>
+<noscript><section class="panel"><h2>浏览器兼容提示</h2><p>当前预览环境没有运行网页脚本，因此按钮无法操作。请用 Safari 打开此 HTML 文件，而不是停留在文件快速预览中。</p></section></noscript>
+<section class="panel"><h2>案件记录</h2><p id="journal" class="notice">初始假设：公寓里可能还有第二个人，但证据不足。</p></section>
+<section class="panel"><h2>双视角切换</h2><p id="switchText" class="muted">先调查两次，再切换到对象的视角。对象的线索和物品单独保存。</p><button id="switch" class="primary" disabled>切换到对象的视角（调查 2 次后解锁）</button><p class="small">对象可以通过屏幕共享口头告诉你选择；由你代为点击。切换视角不会自动交换线索。</p></section>
+<section class="panel hidden" id="ending" aria-live="polite"></section>
+</main>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const rooms={
+ living:{name:'客厅',desc:'桌上有两只杯子，一只干燥，一只杯沿挂着水珠。电视是黑屏，屏幕却映出你的身后。',acts:[['cups','检查两只杯子'],['tv','观察电视反光'],['phone','检查手机']]},
+ bedroom:{name:'卧室',desc:'床只有一侧被压皱。枕边有一张折叠纸片，衣柜门没有关严。',acts:[['note','查看枕边纸片'],['wardrobe','检查衣柜']]},
+ kitchen:{name:'厨房',desc:'水槽里有水，水龙头是干的。冰箱上的电子钟停在 03:17。',acts:[['sink','检查水槽'],['clock','检查电子钟']]},
+ door:{name:'入户门',desc:'门锁扣着。门下的缝隙里有一道细长的影子，但楼道灯似乎已经熄灭。',acts:[['lock','检查门锁'],['listen','贴近门板听声音']]},
+ hall:{name:'楼道',desc:'声控灯时亮时灭。电梯显示屏上出现你公寓的门牌号，而不是楼层。',acts:[['lift','检查电梯显示'],['stairs','查看楼梯方向']]},
+ study:{name:'书房',desc:'门上有数字键盘。你找到的纸片可能藏着密码。',acts:[['unlock','输入纸片上的数字']]}
+};
+const objectRooms={
+ station:{name:'站台',desc:'空荡站台上有一张被踩皱的车票。广播音量忽高忽低。',acts:[['ticket','检查车票'],['bench','查看长椅']]},
+ locker:{name:'失物柜',desc:'17 号柜门没有锁紧，柜缝里透出手机屏幕的微光。',acts:[['cabinet','检查 17 号柜'],['numbers','检查柜号排列']]},
+ office:{name:'值班室',desc:'桌上有一本登记簿，最后一页被撕掉。',acts:[['ledger','查看登记簿'],['radio','检查广播设备']]},
+ platform:{name:'站台尽头',desc:'轨道旁有一块指示牌，箭头同时指向入口与出口。',acts:[['sign','检查指示牌'],['tunnel','观察隧道']]}
+};
+const mk=()=>({room:'living',moves:0,items:[],clues:[],seen:[],alert:0,flags:{},journal:'初始假设：公寓里可能还有第二个人，但证据不足。',chat:[]});
+let S;
+function init(){S={who:0,p:[mk(),mk()],study:false,ending:null};render();}
+function p(){return S.p[S.who]}
+function clue(id,title,desc){if(!p().clues.some(c=>c.id===id))p().clues.push({id,title,desc})}
+function item(id,name){if(!p().items.some(x=>x.id===id))p().items.push({id,name})}
+function seen(id){return p().seen.includes(id)}
+function mark(id){p().seen.push(id)}
+function msg(side,who,text){p().chat.push([side,who,text])}
+function result(text){p().journal=text;p().moves++;render()}
+function chatAction(a){
+ if(S.ending)return;let q=p(),t='';
+ if(S.who===0){
+ switch(a){
+ case'reply':if(!q.flags.reply){q.flags.reply=true;q.alert++;msg('out','你 · 03:18','你是谁？');msg('in','未知 · 03:18','你已经回复了。现在不要看猫眼。');clue('reply','回复后的警告','你回复后，对方立即得知，接着要求你不要看猫眼。');t='对方似乎一直在等你回复。'}else t='没有新消息。';break;
+ case'profile':msg('in','联系人资料','名称：空白\\n号码：本机不可识别\\n最后上线：03:17\\n备注：你保存过这个号码。');clue('profile','异常联系人','资料称这个号码曾被你保存过，但通讯录里没有它。');t='联系人资料出现了矛盾。';break;
+ case'call':if(!q.flags.call){q.flags.call=true;q.alert++;msg('in','语音通话 · 00:03','（三次轻敲声。随后，有人用你的声音说：“别开门。”）');clue('call','电话里的声音','通话中出现三次敲门声，还有一个与你相似的声音。');t='通话只有三秒，声音却像是从门外传来。'}else t='拨号没有接通。';break;
+ case'ignore':clue('silence','没有立即回复','不回复没有消除异常，但给了你调查现场的时间。');t='你暂时没有回复。';break;
+ }
+ }else{
+ switch(a){
+ case'reply':msg('out','对象 · 03:18','你是谁？');msg('in','未知号码 · 03:18','你终于到了。不要让她先找到车票。');clue('stationreply','未知号码的警告','对方提到了“她”和一张车票，但没有说明“她”是谁。');t='未知号码似乎知道你正在调查。';break;
+ case'cabinet':if(!seen(a)){mark(a);item('cabinetphone','柜中手机照片');clue('cabinet','17 号柜中的手机','柜里有一部亮着屏幕的手机，显示：你现在站在门外吗？');t='柜里的手机显示了一句似曾相识的话。'}else t='17 号柜没有新变化。';break;
+ case'schedule':clue('schedule','时刻表矛盾','同一趟末班车的发车时间同时标记为昨天与明天 03:17。');t='时刻表出现互相矛盾的日期。';break;
+ case'broadcast':q.alert++;msg('in','车站广播 · 03:18','请 17 号乘客不要与站台另一端的人交换物品。');clue('broadcast','广播点名','广播要求 17 号乘客不要与另一端的人交换物品。');t='广播像是在对你单独说话。';break;
+ }
+ }
+ result(t||'你查看了消息。');
+}
+function inspect(a){
+ if(S.ending)return;let q=p(),t='';
+ if(S.who===0){
+ switch(a){
+ case'cups':if(!seen(a)){mark(a);item('cup','两只杯子的照片');clue('cups','两只杯子','两只杯子都在你伸手可及的位置，但其中一只的水珠仍在向杯底移动。');t='两只杯子像是刚被使用过。你拍下了照片。'}else t='杯子没有变化。';break;
+ case'tv':if(!seen(a)){mark(a);clue('reflection','电视反光','电视黑屏里，你的身后像站着一个人；转身后，那里空无一物。');t='反光与真实环境不一致。'}else t='屏幕仍映出你的身影。';break;
+ case'phone':if(!seen(a)){mark(a);item('phone','自己的手机');clue('clockphone','时间异常','系统时间是 03:17，但一条通知标记为“明天 03:17”。');t='系统时间正常，通知时间却指向未来。'}else t='你已经检查过手机。';break;
+ case'note':if(!seen(a)){mark(a);item('paper','折叠纸片');clue('paper','纸片上的数字','纸片写着：0317。下面还有一行：不要把时间当作时间。');t='纸片上写着 0317，以及一句含糊的提示。'}else t='纸片没有新内容。';break;
+ case'wardrobe':if(!seen(a)){mark(a);item('coat','一件湿外套');clue('coat','衣柜里的湿外套','外套下摆湿透，口袋里有一张没有日期的电梯维修单。');t='外套还带着潮气，像刚从楼道回来。'}else t='衣柜里没有其他东西。';break;
+ case'sink':if(!seen(a)){mark(a);clue('sink','水槽里的水','水槽积着水，但水龙头和台面都是干的。');t='水似乎不是从水龙头流下来的。'}else t='水槽没有变化。';break;
+ case'clock':if(!seen(a)){mark(a);clue('clock','冰箱电子钟','电子钟停在 03:17。拔掉电源后，显示仍未消失。');t='这只钟的显示似乎不是由电源维持的。'}else t='电子钟仍然停在 03:17。';break;
+ case'lock':if(!seen(a)){mark(a);clue('lock','门锁痕迹','门锁完好，但门内侧有一条新的擦痕，方向像是有人从里面反复拉门。');t='没有被撬锁的痕迹，反而像是有人从里面试图开门。'}else t='门锁没有新的变化。';break;
+ case'listen':if(!seen(a)){mark(a);q.alert++;clue('knock','门外三次敲击','你听见三次敲门声，随后一个声音说：“你终于回来了。”');t='门外传来三次敲击声和一句话。'}else t='门外暂时安静。';break;
+ case'lift':if(!seen(a)){mark(a);clue('lift','电梯显示','电梯屏幕显示你公寓的门牌号，而非楼层数字。');t='显示屏像是在显示你的门牌，而不是楼层。'}else t='电梯显示没有变化。';break;
+ case'stairs':if(!seen(a)){mark(a);clue('stairs','楼梯间的方向','楼梯间的应急指示牌箭头朝上和朝下同时亮着。');t='方向指示互相矛盾。'}else t='楼梯间没有变化。';break;
+ case'unlock':if(!S.study){if(!q.items.some(i=>i.id==='paper')){t='你还没有找到数字纸片。';break;}S.study=true;clue('study','书房打开','输入 0317 后门锁打开。书房里有一张公寓平面图，客厅被标注为“观察点”。');item('map','公寓平面图');t='书房门开了。平面图标注客厅为“观察点”。'}else t='书房门已经打开。';break;
+ case'finaldoor':S.ending='door';t='你选择开门。门外的声音忽然停止了。';break;
+ case'finalwait':S.ending='wait';t='你决定不再回应任何消息，留在原地观察。';break;
+ }
+ }else{
+ switch(a){
+ case'ticket':if(!seen(a)){mark(a);item('ticket','褪色车票');clue('ticket','褪色车票','车票目的地被擦掉了，日期栏却写着“明天”。背面有一串数字：0317。');t='车票日期写着明天，背面有数字 0317。'}else t='车票没有新信息。';break;
+ case'bench':clue('bench','长椅上的水痕','长椅上有两块相邻水痕，其中一块的形状像手机。');t='长椅像是刚有人坐过。';break;
+ case'numbers':clue('numbers','柜号排列','柜号从 16 直接跳到 18，中间的 17 号柜似乎后来才装上。');t='17 号柜不属于原本的排列。';break;
+ case'ledger':clue('ledger','值班登记簿','登记簿记载：03:17，站台无人；03:17，站台有一名乘客。两条记录笔迹相同。');t='同一时间出现两条互相矛盾的记录。';break;
+ case'radio':clue('radio','广播设备','广播设备没有通电，扬声器却仍在播报。');t='设备断电，广播没有停止。';break;
+ case'sign':clue('sign','双向指示牌','箭头同时指向入口和出口，牌子背面写着“先到者不一定先离开”。');t='指示牌似乎在描述一条规则。';break;
+ case'tunnel':clue('tunnel','隧道里的灯','隧道深处亮着一盏灯，但轨道监控显示那里没有任何光源。');t='眼前看到的灯没有出现在监控画面中。';break;
+ case'finalwait':S.ending='wait';t='你选择不再追查，等待列车。';break;
+ }
+ }
+ result(t||'你完成了一次调查。');if(S.ending)end();
+}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){
+ let q=p(),isObj=S.who===1;
+ $('who').textContent='当前视角：'+(isObj?'对象':'你');
+ $('intro').textContent=isObj?'你对象在一座空荡的夜间车站醒来。电子时刻表显示 03:17，广播却说末班车已经在明天到站。他面前有一个失物柜，里面传来手机振动声。':'你在一间陌生公寓的客厅醒来。手机显示凌晨 03:17。门锁从里面扣着，窗边有两只杯子。手机里出现一个没有头像的联系人。';
+ $('clock').textContent='03:'+String(17+Math.min(42,q.moves)).padStart(2,'0');$('moves').textContent=q.moves;$('count').textContent=q.clues.length;$('alert').textContent=q.alert>=3?'高':q.alert?'中':'低';
+ let chat=isObj?[['in','车站广播 · 03:16','末班车已经于明天 03:17 到站。'],['in','未知号码 · 03:17','别打开 17 号柜。'],...q.chat]:[['in','未知 · 03:16','你醒了吗？'],['in','未知 · 03:17','不要开门。无论门外的人说什么。'],...q.chat];
+ $('chat').innerHTML=chat.map(m=>'<div class="bubble '+(m[0]==='out'?'out':'in')+'"><div class="stamp">'+esc(m[1])+'</div>'+esc(m[2])+'</div>').join('');
+ let cActs=isObj?[['reply','回复：你是谁？'],['cabinet','检查 17 号柜'],['schedule','检查时刻表'],['broadcast','回应广播']]:[['reply','回复：你是谁？'],['profile','查看联系人资料'],['call','拨打电话'],['ignore','暂时不回复']];
+ $('chatActions').innerHTML=cActs.map(a=>'<button data-chat="'+a[0]+'">'+a[1]+'</button>').join('');
+ let data=isObj?objectRooms:rooms;
+ $('map').innerHTML=Object.entries(data).map(([k,r])=>'<button data-room="'+k+'" class="'+(q.room===k?'primary':'')+'" '+(k==='study'&&!S.study?'disabled':'')+'>'+r.name+'</button>').join('');
+ let r=data[q.room]||Object.values(data)[0];$('roomName').textContent=r.name;$('roomDesc').textContent=r.desc;
+ let acts=r.acts.slice();if(!isObj&&q.room==='door'&&q.clues.length>=3)acts.push(['finaldoor','开门离开']);if(q.moves>=5)acts.push(['finalwait','关闭手机，等待']);
+ $('actions').innerHTML=acts.map(a=>'<button data-inspect="'+a[0]+'">'+a[1]+'</button>').join('');
+ $('items').innerHTML=q.items.length?q.items.map(i=>'<span class="tag">'+esc(i.name)+'</span>').join(''):'空';
+ $('clues').innerHTML=q.clues.length?q.clues.map(c=>'<div class="log"><b>'+esc(c.title)+'</b><div class="muted">'+esc(c.desc)+'</div></div>').join(''):'尚无确认线索。';
+ $('journal').textContent=q.journal;$('switch').disabled=q.moves<2||!!S.ending;$('switch').textContent=isObj?'切换回你的视角（保留对象进度）':'切换到对象的视角（保留双方独立记录）';
+ $('switchText').textContent=isObj?'对象正在调查车站。由他口头选择操作；你可以代替他点击。切回你时，他的线索会保留。':'先调查至少两次，再邀请对象独立思考并切换视角。他的线索不会自动变成你的线索。';
+}
+function end(){let title=S.ending==='door'?'结局：门外是谁？':'结局：错过的列车';$('ending').classList.remove('hidden');$('ending').innerHTML='<h2>'+title+'</h2><p>你做出了选择。门外没有人，只有一部亮着屏幕的手机。另一视角的广播突然中断。两份记录仍有一个没有名字的人。</p><p class="muted">重开会清空双方进度。</p>'}
+$('game').addEventListener('click',e=>{let b=e.target.closest('button');if(!b)return;if(b.dataset.chat)chatAction(b.dataset.chat);if(b.dataset.inspect)inspect(b.dataset.inspect);if(b.dataset.room){p().room=b.dataset.room;render()}});
+$('switch').addEventListener('click',()=>{S.who=1-S.who;p().room=S.who===0?'living':'station';render()});$('reset').addEventListener('click',init);init();
+})();
+</script></body></html>
